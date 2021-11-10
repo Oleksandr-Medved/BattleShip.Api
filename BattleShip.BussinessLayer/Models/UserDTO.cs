@@ -1,6 +1,6 @@
 ﻿namespace BattleShip.BussinessLayer.Models
 {
-    public class LoginDTO
+    public class UserDTO
     {
         public string UserName { get; set; }
 

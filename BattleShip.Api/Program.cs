@@ -1,6 +1,7 @@
+using BattleShip.BussinessLayer.Interfaces;
+using BattleShip.BussinessLayer.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,11 +37,15 @@ builder.Services.AddAuthentication(option =>
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
 
-            ValidIssuer = "http://localhost:5036",
-            ValidAudience = "http://localhost:5036",
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretkey@345"))
+            ValidIssuer = AuthService.ISSUER,
+            ValidAudience = AuthService.AUDIENCE,
+            IssuerSigningKey = AuthService.GetSymmetricSecurityKey()
         };
     });
+
+builder.Services.AddTransient<AuthService, AuthService>();
+builder.Services.AddTransient<IUserService, UserService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

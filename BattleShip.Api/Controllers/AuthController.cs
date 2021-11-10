@@ -1,4 +1,5 @@
 ﻿using BattleShip.BussinessLayer.Models;
+using BattleShip.BussinessLayer.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,25 +12,30 @@ namespace BattleShip.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private AuthService authService;
 
+        public AuthController(AuthService authService)
+        {
+            this.authService = authService;
+        }
+        
         [HttpPost]
-        public IActionResult Login([FromBody] LoginDTO user)
+        public IActionResult Login([FromBody] UserDTO user)
         {
             if (user == null)
             {
                 return BadRequest("Invalid client request");
             }
 
-            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretkey@345"));
+            var secretKey = AuthService.GetSymmetricSecurityKey();
 
             var signingCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var tokenOptions = new JwtSecurityToken(
-                issuer: "http://localhost:5036",
-                audience: "http://localhost:5036",
+                issuer: AuthService.ISSUER,
+                audience: AuthService.AUDIENCE,
                 claims: new List<Claim>(),
-                expires: DateTime.Now.AddMinutes(5),
+                expires: DateTime.Now.AddMinutes(AuthService.LIFETIME),
                 signingCredentials: signingCredentials);
-
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
