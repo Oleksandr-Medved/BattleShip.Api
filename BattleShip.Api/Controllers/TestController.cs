@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BattleShip.Api.Controllers
 {
+
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("[controller]")]
+   
     public class TestController : ControllerBase
     {
 
@@ -11,6 +14,7 @@ namespace BattleShip.Api.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public string Get()
         {
             return this.TestProperty;
