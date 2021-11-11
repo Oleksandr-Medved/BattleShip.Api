@@ -1,13 +1,23 @@
 ﻿using BattleShip.BussinessLayer.Interfaces;
 using BattleShip.BussinessLayer.Models;
+using Microsoft.Extensions.Logging;
 
 namespace BattleShip.BussinessLayer.Services
 {
     public class UserService : IUserService
     {
-        public Task<UserDTO> Authenticate(UserDTO user)
+        private readonly ILogger<UserService> logger;
+
+        public UserService(ILogger<UserService> logger)
         {
-            throw new NotImplementedException();
+            this.logger = logger;
+        }
+
+        public async Task<bool> Validate(UserDTO user)
+        {
+            this.logger.LogInformation("Validate User");
+
+            return await Task.FromResult(true);
         }
     }
 }

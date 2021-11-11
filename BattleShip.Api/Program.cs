@@ -2,6 +2,7 @@ using BattleShip.BussinessLayer.Interfaces;
 using BattleShip.BussinessLayer.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +23,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Authentication configuration
+var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]));
+
+// Authentication configuration with JWT
 builder.Services.AddAuthentication(option =>
     {
         option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -36,14 +39,13 @@ builder.Services.AddAuthentication(option =>
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-
-            ValidIssuer = AuthService.ISSUER,
-            ValidAudience = AuthService.AUDIENCE,
-            IssuerSigningKey = AuthService.GetSymmetricSecurityKey()
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = key,
         };
     });
 
-builder.Services.AddTransient<AuthService, AuthService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddTransient<IUserService, UserService>();
 
 var app = builder.Build();

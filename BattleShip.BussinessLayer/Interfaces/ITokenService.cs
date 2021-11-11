@@ -2,8 +2,8 @@
 
 namespace BattleShip.BussinessLayer.Interfaces
 {
-    public interface IUserService
+    public interface ITokenService
     {
-        Task<bool> Validate(UserDTO user);
+        string CreateToken(UserDTO userDTO);
     }
 }

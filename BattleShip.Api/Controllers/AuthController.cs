@@ -1,10 +1,6 @@
-﻿using BattleShip.BussinessLayer.Models;
-using BattleShip.BussinessLayer.Services;
+﻿using BattleShip.BussinessLayer.Interfaces;
+using BattleShip.BussinessLayer.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace BattleShip.Api.Controllers
 {
@@ -12,34 +8,38 @@ namespace BattleShip.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private AuthService authService;
+        private ITokenService jwtService;
 
-        public AuthController(AuthService authService)
+        private readonly ILogger<AuthController> logger;
+
+        private readonly IUserService userService;
+
+        public AuthController(ITokenService authService, IUserService userService, ILogger<AuthController> logger)
         {
-            this.authService = authService;
+            this.jwtService = authService;
+            this.userService = userService;
+            this.logger = logger;
         }
-        
+
         [HttpPost]
-        public IActionResult Login([FromBody] UserDTO user)
+        public async Task<IActionResult> Login([FromBody] UserDTO user)
         {
-            if (user == null)
+            this.logger.LogInformation($"Hit Login Method - User: {user.Email}");
+
+            var userIsValid = await this.userService.Validate(user);
+
+            if (!userIsValid)
             {
+                this.logger.LogError("User is invalid");
+
                 return BadRequest("Invalid client request");
             }
 
-            var secretKey = AuthService.GetSymmetricSecurityKey();
+            var tokenString = this.jwtService.CreateToken(user);
 
-            var signingCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-            var tokenOptions = new JwtSecurityToken(
-                issuer: AuthService.ISSUER,
-                audience: AuthService.AUDIENCE,
-                claims: new List<Claim>(),
-                expires: DateTime.Now.AddMinutes(AuthService.LIFETIME),
-                signingCredentials: signingCredentials);
+            this.logger.LogInformation("Token was generated");
 
-            var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-
-            return Ok(new { Token = tokenString });
+            return Ok(new { UserEmail = user.Email , Token = tokenString });
         }
     }
 }
