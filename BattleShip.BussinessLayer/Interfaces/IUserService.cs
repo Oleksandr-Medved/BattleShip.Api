@@ -4,6 +4,6 @@ namespace BattleShip.BussinessLayer.Interfaces
 {
     public interface IUserService
     {
-        Task<bool> Validate(UserDTO user);
+        Task<bool> Validate(LoginDTO user);
     }
 }

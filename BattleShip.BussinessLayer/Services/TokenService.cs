@@ -27,11 +27,11 @@ namespace BattleShip.BussinessLayer.Services
             this.symmetricKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(this.configuration["Jwt:Key"]));
         }
 
-        public string CreateToken(UserDTO userDTO)
+        public string CreateToken(LoginDTO userDTO)
         {
             var claims = new List<Claim>
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, userDTO.UserName),
+                    new Claim(JwtRegisteredClaimNames.Sub, userDTO.Name),
                     new Claim(JwtRegisteredClaimNames.Email, userDTO.Email),                   
                 };
 

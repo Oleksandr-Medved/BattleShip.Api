@@ -13,7 +13,7 @@ namespace BattleShip.BussinessLayer.Services
             this.logger = logger;
         }
 
-        public async Task<bool> Validate(UserDTO user)
+        public async Task<bool> Validate(LoginDTO user)
         {
             this.logger.LogInformation("Validate User");
 

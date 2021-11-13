@@ -22,7 +22,7 @@ namespace BattleShip.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] UserDTO user)
+        public async Task<IActionResult> Login([FromBody] LoginDTO user)
         {
             this.logger.LogInformation($"Hit Login Method - User: {user.Email}");
 
