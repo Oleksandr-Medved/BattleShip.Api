@@ -27,12 +27,12 @@ namespace BattleShip.BussinessLayer.Services
             this.symmetricKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(this.configuration["Jwt:Key"]));
         }
 
-        public string CreateToken(LoginDTO userDTO)
+        public string CreateToken(UserDTO userDTO)
         {
             var claims = new List<Claim>
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, userDTO.Name),
-                    new Claim(JwtRegisteredClaimNames.Email, userDTO.Email),                   
+                    new Claim(JwtRegisteredClaimNames.Email, userDTO.Email),
                 };
 
             var credentials = new SigningCredentials(this.symmetricKey, SecurityAlgorithms.HmacSha512Signature);
@@ -42,9 +42,9 @@ namespace BattleShip.BussinessLayer.Services
                    audience: this.audience,
                    claims: claims,
                    expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(this.lifetime)),
-                   signingCredentials: credentials);              
+                   signingCredentials: credentials);
 
-            return new JwtSecurityTokenHandler().WriteToken(jwt);           
+            return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
     }
 }
