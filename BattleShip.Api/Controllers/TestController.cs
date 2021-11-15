@@ -6,7 +6,7 @@ namespace BattleShip.Api.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-   
+
     public class TestController : ControllerBase
     {
 
@@ -15,9 +15,10 @@ namespace BattleShip.Api.Controllers
 
         [HttpGet]
         [Authorize]
-        public string Get()
+        public async Task<IActionResult> Get()
         {
-            return this.TestProperty;
+            await Task.FromResult(0);
+            return Ok(new { property = this.TestProperty });
         }
     }
 }
