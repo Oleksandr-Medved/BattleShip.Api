@@ -1,6 +1,8 @@
 using BattleShip.BussinessLayer.Interfaces;
 using BattleShip.BussinessLayer.Services;
+using BattleShip.DataAccessLayer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -44,6 +46,10 @@ builder.Services.AddAuthentication(option =>
             IssuerSigningKey = key,
         };
     });
+
+var connectionString = builder.Configuration.GetConnectionString("BattleShipDB");
+
+builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddTransient<IUserService, UserService>();
