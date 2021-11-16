@@ -1,27 +1,20 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace BattleShip.DataAccessLayer.Repositories
 {
-    public interface IRepository<TContext> where TContext : DbContext
+    public interface IRepository<TEntity> where TEntity : class
     {
-        TContext Context { get; set; }
+        Task<IEnumerable<TEntity>> GetBy(Expression<Func<TEntity, bool>> expression, bool asTracked = true);
 
-        Task<T> GetBy<T>(Expression<Func<T, bool>> expression, bool asTracked = true);
+        Task<IEnumerable<TEntity>> GetByWithInclude(Expression<Func<TEntity, bool>> expression,
+            params Expression<Func<TEntity, object>>[] includeProperties);
 
-        Task<T> GetByWithInclude<T>(Expression<Func<T,bool>> expression, params Expression<Func<T, object>>[] includeProperties);
+        Task<IEnumerable<TEntity>> GetAll();
 
-        Task<IQueryable<T>> Filter<T>(Expression<Func<T, bool>> expression, bool asTracked = true);
+        void Add(TEntity entity);
 
-        IQueryable<T> GetAll<T>();
+        void Update(TEntity entity);
 
-        void Add<T>(T entity);
-
-        void Update<T>(T entity);
+        void Delete(TEntity entity);
     }
 }

@@ -1,6 +1,7 @@
 using BattleShip.BussinessLayer.Interfaces;
 using BattleShip.BussinessLayer.Services;
 using BattleShip.DataAccessLayer;
+using BattleShip.DataAccessLayer.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -53,6 +54,8 @@ builder.Services.AddDbContext<DataContext>(x => x.UseSqlServer(connectionString)
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<DbContext, DataContext>();
+builder.Services.AddTransient(typeof(IRepository<>), typeof(GenericRepository<>));
 
 var app = builder.Build();
 

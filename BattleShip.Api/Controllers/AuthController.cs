@@ -22,11 +22,11 @@ namespace BattleShip.Api.Controllers
         }
 
         [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO loginModel)
+        public async Task<IActionResult> Login([FromBody] UserDTO userDTO)
         {
-            this.logger.LogInformation($"Hit Login Method - User: {loginModel.Name}");
+            this.logger.LogInformation($"Hit Login Method - User: {userDTO.Name}");
 
-            var userIsValid = await this.userService.Validate(loginModel);
+            var userIsValid = await this.userService.IfUserExist(userDTO);
 
             if (!userIsValid)
             {
@@ -35,11 +35,13 @@ namespace BattleShip.Api.Controllers
                 return BadRequest("Invalid client request");
             }
 
-            var user = await this.userService.GetUserByName(loginModel.Name);
+            var tokenString = this.jwtService.CreateToken(userDTO);
 
-            var tokenString = this.jwtService.CreateToken(user);
+            userDTO.Token = tokenString;
 
             this.logger.LogInformation("Token was generated");
+
+            this.userService.AddNewUser(userDTO);
 
             return Ok(new { Token = tokenString });
         }

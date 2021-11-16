@@ -13,4 +13,8 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.14.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BattleShip.DataAccessLayer\BattleShip.DataAccessLayer.csproj" />
+  </ItemGroup>
+
 </Project>

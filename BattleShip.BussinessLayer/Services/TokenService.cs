@@ -31,8 +31,7 @@ namespace BattleShip.BussinessLayer.Services
         {
             var claims = new List<Claim>
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, userDTO.Name),
-                    new Claim(JwtRegisteredClaimNames.Email, userDTO.Email),
+                    new Claim(JwtRegisteredClaimNames.Sub, userDTO.Name),                   
                 };
 
             var credentials = new SigningCredentials(this.symmetricKey, SecurityAlgorithms.HmacSha512Signature);
@@ -42,7 +41,7 @@ namespace BattleShip.BussinessLayer.Services
                    audience: this.audience,
                    claims: claims,
                    expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(this.lifetime)),
-                   signingCredentials: credentials);
+                   signingCredentials: credentials);            
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
