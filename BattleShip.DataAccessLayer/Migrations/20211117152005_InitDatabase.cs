@@ -4,7 +4,7 @@
 
 namespace BattleShip.DataAccessLayer.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

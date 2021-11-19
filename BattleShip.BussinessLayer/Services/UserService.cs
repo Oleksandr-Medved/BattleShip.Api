@@ -10,45 +10,43 @@ namespace BattleShip.BussinessLayer.Services
     {
         private readonly ILogger<UserService> logger;
 
-        private IRepository<User> repo;
+        private IRepository<DataAccessLayer.Models.User> repo;
 
-        public UserService(ILogger<UserService> logger, IRepository<User> repo)
+        public UserService(ILogger<UserService> logger, IRepository<DataAccessLayer.Models.User> repo)
         {
             this.logger = logger;
             this.repo = repo;
         }
 
-        public async Task<UserDTO> GetUserByName(string userName)
+        public string AddNewUser(RegisterDTO userDTO)
         {
-            var user = await this.repo.GetBy(x => x.Name == userName);
-
-            if (user == null || !user.Any()) return new UserDTO();
-
-            return new UserDTO
-            {
-                Name = user.FirstOrDefault().Name
-            };
-        }
-
-        public async Task<bool> IfUserExist(UserDTO user)
-        {
-            this.logger.LogInformation("Validate User");
-
-            var userDTO = await this.repo.GetBy(x => x.Name == user.Name);
-
-            return userDTO == null || !userDTO.Any();
-        }
-
-        public void AddNewUser(UserDTO userDTO)
-        {
-            var user = new User()
-            {
-                Name = userDTO.Name,
-                Password = userDTO.Password,
-                Token = userDTO?.Token
-            };
+            var user = this.EncyptedUserPassword(userDTO);
 
             this.repo.Add(user);
+
+            return user.Name;
+        }
+
+        public async Task<bool> Validate(LoginDTO loginDTO)
+        {
+            this.logger.LogInformation("Validate user");
+
+            var user = await this.repo.GetEntityBy(x => x.Name == loginDTO.Name);
+
+            return user != null && BCrypt.Net.BCrypt.Verify(user.Password, loginDTO.Password);
+        }
+
+        private User EncyptedUserPassword(RegisterDTO userDTO)
+        {
+            this.logger.LogInformation("Encrypting user' password");
+
+            var hashPassword = BCrypt.Net.BCrypt.HashPassword(userDTO.Password);
+
+            return new User()
+            {
+                Name = userDTO.Name,
+                Password = hashPassword
+            };
         }
     }
 }

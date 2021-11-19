@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BattleShip.BussinessLayer\BattleShip.BussinessLayer.csproj" />
+    <ProjectReference Include="..\BattleShip.Core\BattleShip.Core.csproj" />
     <ProjectReference Include="..\BattleShip.DataAccessLayer\BattleShip.DataAccessLayer.csproj" />
   </ItemGroup>
 

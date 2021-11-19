@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BattleShip.DataAccessLayer.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20211116222348_AddNewTokenCOlumn")]
-    partial class AddNewTokenCOlumn
+    [Migration("20211117152005_InitDatabase")]
+    partial class InitDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,10 +36,6 @@ namespace BattleShip.DataAccessLayer.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Token")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

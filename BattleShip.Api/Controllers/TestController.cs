@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BattleShip.Api.Controllers
@@ -9,8 +10,7 @@ namespace BattleShip.Api.Controllers
 
     public class TestController : ControllerBase
     {
-
-        public string TestProperty { get; set; } = "Test";
+        private string TestProperty { get; set; } = "Test";
 
 
         [HttpGet]

@@ -42,7 +42,8 @@ namespace BattleShip.DataAccessLayer.Repositories
         public async Task<IEnumerable<TEntity>> GetBy(Expression<Func<TEntity, bool>> expression,
             bool asTracked = true)
         {
-            //this.logger.LogInformation($"Get entities = {typeof(TEntity)} by");
+            this.logger.LogInformation($"Get entities = {typeof(TEntity)} by");
+
             if (asTracked)
             {
                 return await this.dbSet.AsTracking().Where(expression).ToListAsync();
@@ -60,6 +61,12 @@ namespace BattleShip.DataAccessLayer.Repositories
          .AsQueryable();
 
             return await query.Where(expression).ToListAsync();
+        }
+
+        public async Task<TEntity> GetEntityBy(Expression<Func<TEntity, bool>> expression)
+        {
+            this.logger.LogInformation($"Get first entity = {typeof(TEntity)}");
+            return await this.dbSet.FirstAsync(expression);
         }
 
         public void Update(TEntity entity)

@@ -4,6 +4,6 @@ namespace BattleShip.BussinessLayer.Interfaces
 {
     public interface ITokenService
     {
-        string CreateToken(UserDTO userDTO);
+        string CreateToken<T>(T userDTO) where T : UserDTO;
     }
 }

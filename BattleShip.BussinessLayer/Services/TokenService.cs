@@ -1,4 +1,6 @@
-﻿using BattleShip.BussinessLayer.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using BattleShip.BussinessLayer.Interfaces;
 using BattleShip.BussinessLayer.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -27,11 +29,13 @@ namespace BattleShip.BussinessLayer.Services
             this.symmetricKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(this.configuration["Jwt:Key"]));
         }
 
-        public string CreateToken(UserDTO userDTO)
+
+        public string CreateToken<T>(T userDTO) where T : UserDTO
         {
             var claims = new List<Claim>
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, userDTO.Name),                   
+                    new(JwtRegisteredClaimNames.Sub, userDTO.Name),
+                    new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
             var credentials = new SigningCredentials(this.symmetricKey, SecurityAlgorithms.HmacSha512Signature);
@@ -41,7 +45,7 @@ namespace BattleShip.BussinessLayer.Services
                    audience: this.audience,
                    claims: claims,
                    expires: DateTime.UtcNow.Add(TimeSpan.FromMinutes(this.lifetime)),
-                   signingCredentials: credentials);            
+                   signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
