@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 
 namespace BattleShip.DataAccessLayer.Repositories
 {
@@ -10,8 +7,8 @@ namespace BattleShip.DataAccessLayer.Repositories
         Task<IEnumerable<TEntity>> GetBy(Expression<Func<TEntity, bool>> expression, bool asTracked = true);
 
         Task<TEntity> GetEntityBy(Expression<Func<TEntity, bool>> expression);
-
-        Task<IEnumerable<TEntity>> GetByWithInclude(Expression<Func<TEntity, bool>> expression, params Expression<Func<TEntity, object>>[] includeProperties);
+        Task<IEnumerable<TEntity>> GetByWithInclude(Expression<Func<TEntity, bool>> expression,
+            params Expression<Func<TEntity, object>>[] includeProperties);
 
         Task<IEnumerable<TEntity>> GetAll();
 

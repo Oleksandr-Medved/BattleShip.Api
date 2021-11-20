@@ -67,7 +67,7 @@ namespace BattleShip.DataAccessLayer.Repositories
         {
             this.logger.LogInformation($"Get first entity = {typeof(TEntity)}");
             return await this.dbSet.FirstAsync(expression);
-        }
+        }      
 
         public void Update(TEntity entity)
         {

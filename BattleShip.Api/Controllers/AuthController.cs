@@ -42,7 +42,7 @@ namespace BattleShip.Api.Controllers
 
             if (!isUserValid)
             {
-                return BadRequest("Login is not valid");
+                return BadRequest("Login or password is not valid");
             }
 
             var tokenString = this.jwtService.CreateToken(loginDtO);
@@ -60,7 +60,7 @@ namespace BattleShip.Api.Controllers
             this.logger.LogInformation($"Hit Register Method - User: {registerDTO.Name}");
 
             if (!this.ModelState.IsValid || registerDTO.ConfirmedPassword != registerDTO.Password)
-                return BadRequest("Model is not valid");
+                return BadRequest("Invalid data. Probably passwords don't match.");
 
             var userName = this.userService.AddNewUser(registerDTO);
 

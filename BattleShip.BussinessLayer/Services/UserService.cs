@@ -31,9 +31,9 @@ namespace BattleShip.BussinessLayer.Services
         {
             this.logger.LogInformation("Validate user");
 
-            var user = await this.repo.GetEntityBy(x => x.Name == loginDTO.Name);
+            var user = await this.repo.GetEntityBy(x => x.Name == loginDTO.Name);                      
 
-            return user != null && BCrypt.Net.BCrypt.Verify(user.Password, loginDTO.Password);
+            return user != null && BCrypt.Net.BCrypt.Verify(loginDTO.Password, user.Password);
         }
 
         private User EncyptedUserPassword(RegisterDTO userDTO)
