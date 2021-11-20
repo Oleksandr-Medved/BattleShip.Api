@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using BattleShip.BussinessLayer.Models;
+﻿using BattleShip.BussinessLayer.Models;
 
 namespace BattleShip.BussinessLayer.Interfaces
 {
@@ -7,6 +6,6 @@ namespace BattleShip.BussinessLayer.Interfaces
     {
         string AddNewUser(RegisterDTO registerDTO);
 
-        Task<bool> Validate(LoginDTO loginDTO);
+        Task<bool> Validate<T>(T userDTO) where T : UserDTO;
     }
 }

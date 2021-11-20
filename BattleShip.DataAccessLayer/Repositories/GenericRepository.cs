@@ -21,9 +21,17 @@ namespace BattleShip.DataAccessLayer.Repositories
 
         public void Add(TEntity entity)
         {
-            this.logger.LogInformation($"Add new entity = {typeof(TEntity)}");
-            this.dbSet.Add(entity);
-            this.dbContext.SaveChanges();
+            try
+            {
+                this.logger.LogInformation($"Add new entity = {typeof(TEntity)}");
+                this.dbSet.Add(entity);
+                this.dbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex.Message);
+                throw new Exception(ex.Message);                
+            }
         }
 
         public void Delete(TEntity entity)
@@ -65,9 +73,18 @@ namespace BattleShip.DataAccessLayer.Repositories
 
         public async Task<TEntity> GetEntityBy(Expression<Func<TEntity, bool>> expression)
         {
-            this.logger.LogInformation($"Get first entity = {typeof(TEntity)}");
-            return await this.dbSet.FirstAsync(expression);
-        }      
+            try
+            {
+                this.logger.LogInformation($"Get first entity = {typeof(TEntity)}");
+                return await this.dbSet.FirstOrDefaultAsync(expression);
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex.Message);
+                throw new Exception(ex.Message);
+            }
+
+        }
 
         public void Update(TEntity entity)
         {

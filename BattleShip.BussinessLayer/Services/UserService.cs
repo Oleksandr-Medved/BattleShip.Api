@@ -2,6 +2,7 @@
 using BattleShip.BussinessLayer.Models;
 using BattleShip.DataAccessLayer.Models;
 using BattleShip.DataAccessLayer.Repositories;
+using BCrypt.Net;
 using Microsoft.Extensions.Logging;
 
 namespace BattleShip.BussinessLayer.Services
@@ -10,12 +11,22 @@ namespace BattleShip.BussinessLayer.Services
     {
         private readonly ILogger<UserService> logger;
 
-        private IRepository<DataAccessLayer.Models.User> repo;
+        private IRepository<User> repo;
 
-        public UserService(ILogger<UserService> logger, IRepository<DataAccessLayer.Models.User> repo)
+        private ValidateUser validate;
+
+        public UserService(ILogger<UserService> logger, IRepository<User> repo, ValidateUser validate)
         {
             this.logger = logger;
             this.repo = repo;
+            this.validate = validate;
+        }
+
+        public async Task<bool> Validate<T>(T userDTO) where T : UserDTO
+        {
+            this.logger.LogInformation("Validate user");
+
+            return await this.validate.Validate(userDTO);
         }
 
         public string AddNewUser(RegisterDTO userDTO)
@@ -27,20 +38,11 @@ namespace BattleShip.BussinessLayer.Services
             return user.Name;
         }
 
-        public async Task<bool> Validate(LoginDTO loginDTO)
-        {
-            this.logger.LogInformation("Validate user");
-
-            var user = await this.repo.GetEntityBy(x => x.Name == loginDTO.Name);                      
-
-            return user != null && BCrypt.Net.BCrypt.Verify(loginDTO.Password, user.Password);
-        }
-
         private User EncyptedUserPassword(RegisterDTO userDTO)
         {
-            this.logger.LogInformation("Encrypting user' password");
+            this.logger.LogInformation("Encrypting user's password");
 
-            var hashPassword = BCrypt.Net.BCrypt.HashPassword(userDTO.Password);
+            var hashPassword = BCrypt.Net.BCrypt.EnhancedHashPassword(userDTO.Password, hashType: HashType.SHA384);
 
             return new User()
             {

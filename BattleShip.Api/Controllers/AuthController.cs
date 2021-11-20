@@ -1,6 +1,7 @@
 ﻿using BattleShip.BussinessLayer.Interfaces;
 using BattleShip.BussinessLayer.Models;
 using BattleShip.Core;
+using BattleShip.Core.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BattleShip.Api.Controllers
@@ -49,18 +50,28 @@ namespace BattleShip.Api.Controllers
 
             this.logger.LogInformation("Token was generated");
 
-            var token = this.jsonSerialization.Serialize(tokenString);
+            var loginView = new LoginView()
+            {
+                Name = loginDtO.Name,
+                Token = tokenString
+            };
 
-            return Ok(token);
+            var loginViewJson = this.jsonSerialization.Serialize(loginView);
+
+            return Ok(loginViewJson);
         }
 
         [HttpPost("Register")]
-        public IActionResult Register([FromBody] RegisterDTO registerDTO)
+        public async Task<IActionResult> Register([FromBody] RegisterDTO registerDTO)
         {
             this.logger.LogInformation($"Hit Register Method - User: {registerDTO.Name}");
 
             if (!this.ModelState.IsValid || registerDTO.ConfirmedPassword != registerDTO.Password)
                 return BadRequest("Invalid data. Probably passwords don't match.");
+
+            var isValid = await this.userService.Validate(registerDTO);
+
+            if (!isValid) return BadRequest("This name has already been taken.");
 
             var userName = this.userService.AddNewUser(registerDTO);
 

@@ -58,6 +58,7 @@ builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<DbContext, DataContext>();
 builder.Services.AddTransient(typeof(IRepository<>), typeof(GenericRepository<>));
 builder.Services.AddTransient<JsonSerialization, JsonSerialization>();
+builder.Services.AddTransient<ValidateUser, ValidateUser>();
 
 var app = builder.Build();
 
